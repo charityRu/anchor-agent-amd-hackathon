@@ -1,0 +1,565 @@
+/* =============================================
+   ANCHOR AGENT — MISSION CONTROL CSS
+   Matches screenshot exactly
+============================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  background: #050d1a;
+  color: #c8d8e8;
+  font-family: 'Courier New', 'Consolas', monospace;
+}
+
+/* =============================================
+   ROOT SHELL
+============================================= */
+.aa-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #050d1a;
+}
+
+/* =============================================
+   TOP NAV
+============================================= */
+.aa-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 48px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0, 180, 255, 0.1);
+  background: rgba(5, 13, 26, 0.95);
+}
+
+.aa-topnav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.aa-topnav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00cfff;
+  box-shadow: 0 0 8px #00cfff;
+  flex-shrink: 0;
+}
+
+.aa-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #e0f0ff;
+}
+
+.aa-topnav-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aa-status-text {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #8ab0cc;
+}
+
+.aa-sev-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.aa-sev-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #8ab0cc;
+  margin-right: 2px;
+}
+
+.aa-sev-seg {
+  display: inline-block;
+  width: 22px;
+  height: 6px;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+
+.aa-topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 280px;
+  justify-content: flex-end;
+}
+
+.aa-clock {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #8ab0cc;
+}
+
+.aa-uptime-badge {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #22c55e;
+  border: 1px solid #22c55e44;
+  border-radius: 4px;
+  padding: 2px 8px;
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* =============================================
+   STATUS DOTS
+============================================= */
+.aa-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.aa-status-dot.green {
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+}
+
+.aa-status-dot.cyan {
+  background: #00cfff;
+  box-shadow: 0 0 6px #00cfff;
+}
+
+.aa-status-dot.yellow {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+}
+
+/* =============================================
+   MAIN GRID
+============================================= */
+.aa-main {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  /* center fills space, right panel is fixed 300px */
+  grid-template-columns: 1fr 300px;
+  gap: 0;
+  overflow: hidden;
+}
+
+/* =============================================
+   CENTER PANEL
+============================================= */
+.aa-center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0, 180, 255, 0.1);
+  overflow: hidden;
+}
+
+/* corner labels */
+.aa-center-corner {
+  position: absolute;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: #4a7090;
+}
+
+.aa-center-corner.top-left    { top: 12px; left: 16px; }
+.aa-center-corner.top-right   { top: 12px; right: 16px; }
+.aa-center-corner.bottom-left { bottom: 12px; left: 16px; }
+.aa-center-corner.bottom-right{ bottom: 12px; right: 16px; }
+
+/* center body — scrollable if content overflows */
+.aa-center-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 48px 40px;
+  overflow-y: auto;
+  gap: 0;
+}
+
+.aa-monitor-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #4a90c0;
+  margin-bottom: 10px;
+}
+
+.aa-hero-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: clamp(40px, 5vw, 68px);
+  font-weight: 700;
+  color: #e8f4ff;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.aa-hero-sub {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: #4a7090;
+  margin-bottom: 24px;
+}
+
+/* ORB */
+.aa-orb-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.aa-orb {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aa-orb-core {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #60d0ff, #0080c0);
+  box-shadow: 0 0 20px #00cfff, 0 0 40px rgba(0, 207, 255, 0.3);
+  z-index: 2;
+}
+
+.aa-orb-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 207, 255, 0.25);
+  width: 64px;
+  height: 64px;
+  animation: orb-pulse 3s ease-in-out infinite;
+}
+
+.aa-orb-ring-2 {
+  width: 96px;
+  height: 96px;
+  border-color: rgba(0, 207, 255, 0.1);
+  animation-delay: 1s;
+}
+
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+
+/* STAT CARDS */
+.aa-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.aa-stat-card {
+  background: rgba(0, 30, 60, 0.6);
+  border: 1px solid rgba(0, 180, 255, 0.1);
+  border-radius: 8px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.aa-stat-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: #4a7090;
+  margin-bottom: 6px;
+}
+
+.aa-stat-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #22c55e;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.aa-stat-value.cyan {
+  color: #38bdf8;
+}
+
+.aa-stat-unit {
+  font-size: 14px;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.aa-stat-sub {
+  font-size: 9px;
+  color: #4a7090;
+  letter-spacing: 0.06em;
+}
+
+/* INPUT */
+.aa-input-row {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.aa-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 20, 45, 0.7);
+  border: 1px solid rgba(0, 180, 255, 0.15);
+  border-radius: 6px;
+  color: #c8d8e8;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.aa-input::placeholder {
+  color: #3a5060;
+}
+
+.aa-input:focus {
+  border-color: rgba(0, 207, 255, 0.4);
+  box-shadow: 0 0 0 1px rgba(0, 207, 255, 0.1);
+}
+
+/* BUTTONS */
+.aa-btn-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.aa-btn {
+  flex: 1;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.aa-btn:active {
+  transform: scale(0.98);
+}
+
+.aa-btn-trigger {
+  background: #c0392b;
+  color: #fff;
+}
+
+.aa-btn-trigger:hover {
+  background: #e74c3c;
+}
+
+.aa-btn-safe {
+  background: #22c55e;
+  color: #fff;
+}
+
+.aa-btn-safe:hover {
+  background: #16a34a;
+}
+
+.aa-btn-icon {
+  font-size: 15px;
+}
+
+/* =============================================
+   RIGHT PANEL
+============================================= */
+.aa-right {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: rgba(3, 10, 22, 0.8);
+}
+
+.aa-right-top {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(0, 180, 255, 0.08);
+}
+
+/* TELEMETRY HEADER */
+.aa-telemetry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 10px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(0, 180, 255, 0.08);
+}
+
+.aa-telemetry-title {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #8ab0cc;
+}
+
+.aa-live-badge {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #ef4444;
+  border: 1px solid #ef444488;
+  border-radius: 3px;
+  padding: 1px 5px;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.aa-entries-count {
+  font-size: 9px;
+  color: #3a5060;
+  margin-left: auto;
+  letter-spacing: 0.06em;
+}
+
+/* LOG SCROLL — THE KEY FIX */
+.aa-log-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 14px;
+}
+
+.aa-log-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.aa-log-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.aa-log-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 255, 0.2);
+  border-radius: 2px;
+}
+
+.aa-log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0, 180, 255, 0.05);
+}
+
+.aa-log-time {
+  font-size: 9px;
+  color: #3a6080;
+  letter-spacing: 0.06em;
+}
+
+.aa-log-text {
+  font-size: 11px;
+  color: #8ab0cc;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+
+.aa-log-placeholder .aa-log-time {
+  color: #253545;
+}
+
+/* ACTIVITY BAR CHART */
+.aa-activity-section {
+  flex-shrink: 0;
+  padding: 12px 14px 14px;
+}
+
+.aa-activity-label {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: #3a5060;
+  margin-bottom: 10px;
+}
+
+.aa-bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 60px;
+}
+
+.aa-bar {
+  flex: 1;
+  background: rgba(0, 180, 255, 0.35);
+  border-radius: 2px 2px 0 0;
+  min-height: 4px;
+  transition: height 0.3s ease;
+}
+
+.aa-bar:nth-child(odd) {
+  background: rgba(0, 180, 255, 0.55);
+}
+
+/* =============================================
+   FOOTER STATUS BAR
+============================================= */
+.aa-footer {
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 20px;
+  border-top: 1px solid rgba(0, 180, 255, 0.1);
+  background: rgba(3, 8, 18, 0.9);
+  overflow: hidden;
+}
+
+.aa-footer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.aa-footer-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #3a5060;
+}
+
+.aa-footer-val {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #4a7090;
+}
