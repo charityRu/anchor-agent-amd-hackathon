@@ -156,8 +156,7 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
-  /* center fills space, right panel is fixed 300px */
-  grid-template-columns: 1fr 300px;
+ grid-template-columns: 60% 40%;
   gap: 0;
   overflow: hidden;
 }
@@ -245,8 +244,8 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #60d0ff, #0080c0);
-  box-shadow: 0 0 20px #00cfff, 0 0 40px rgba(0, 207, 255, 0.3);
+ background: radial-gradient(circle at 40% 35%, #ff6b6b, #c1121f);
+box-shadow: 0 0 20px #ff3b3b, 0 0 40px rgba(255, 59, 59, 0.45);
   z-index: 2;
 }
 

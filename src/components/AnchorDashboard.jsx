@@ -13,6 +13,15 @@ export default function AnchorDashboard() {
   const [input, setInput] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
 
+// ===============================
+// 📍 GPS STATE
+// ===============================
+const [location, setLocation] = useState({
+  latitude: null,
+  longitude: null,
+  accuracy: null,
+  error: null,
+});
   // ===============================
   // 🎤 VOICE RECOGNITION STATE
   // ===============================
@@ -26,7 +35,7 @@ export default function AnchorDashboard() {
 
   const agentRef = useRef(null);
   const logScrollRef = useRef(null);
-
+  const anchorHoldTimer = useRef(null);
   // ===============================
   // 🧠 LOGGING SYSTEM
   // ===============================
@@ -69,6 +78,45 @@ export default function AnchorDashboard() {
   // ===============================
   // 🌐 MAIN INITIALIZATION EFFECT
   // ===============================
+// ===============================
+// 📍 GET USER GPS
+// ===============================
+useEffect(() => {
+  if (!navigator.geolocation) {
+    addLog("❌ Geolocation is not supported.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        error: null,
+      });
+
+      addLog("📍 GPS location acquired.");
+    },
+    (error) => {
+      setLocation((prev) => ({
+        ...prev,
+        error: error.message,
+      }));
+
+      addLog("❌ GPS Error: " + error.message);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    }
+  );
+}, []);
+
+
+
+
   useEffect(() => {
     // 🌐 BACKEND CONNECTION
     fetch("http://localhost:5000/")
@@ -94,12 +142,16 @@ export default function AnchorDashboard() {
       recognition.lang = "en-US";
 
       // 🎤 WHEN SPEECH IS DETECTED
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+      recognition.onresult = async (event) => {
+  const transcript = event.results[0][0].transcript;
 
-        setInput(transcript);
-        addLog("🎤 Voice detected: " + transcript);
-      };
+  setInput(transcript);
+
+  addLog("🎤 Voice detected: " + transcript);
+
+  // Automatically send voice to the AI
+  await agent.triggerEvent(transcript);
+};
 
       // 🎤 START LISTENING
       recognition.onstart = () => {
@@ -169,7 +221,27 @@ export default function AnchorDashboard() {
     { color: "#f59e0b" },
     { color: "#ef4444" },
   ];
+const handleAnchorPress = () => {
+  console.log("Anchor pressed");
 
+  if (anchorHoldTimer.current) return;
+
+  anchorHoldTimer.current = setTimeout(() => {
+    console.log("🚨 Emergency Activated");
+agent.triggerEvent("Emergency button activated");
+    // Reset so the button can be used again
+    anchorHoldTimer.current = null;
+  }, 3000);
+};
+
+const handleAnchorRelease = () => {
+  console.log("Anchor released");
+
+  if (anchorHoldTimer.current) {
+    clearTimeout(anchorHoldTimer.current);
+    anchorHoldTimer.current = null;
+  }
+};
   return (
   <div className="aa-root">
 
@@ -221,7 +293,14 @@ export default function AnchorDashboard() {
           </p>
 
           <div className="aa-orb-wrap">
-            <div className="aa-orb">
+            <div
+  className="aa-orb"
+  onMouseDown={handleAnchorPress}
+  onMouseUp={handleAnchorRelease}
+  onMouseLeave={handleAnchorRelease}
+  onTouchStart={handleAnchorPress}
+  onTouchEnd={handleAnchorRelease}
+>
               <div className="aa-orb-core" />
               <div className="aa-orb-ring" />
               <div className="aa-orb-ring aa-orb-ring-2" />
@@ -374,7 +453,7 @@ export default function AnchorDashboard() {
     <footer className="aa-footer">
       <div className="aa-footer-item">
         <span className="aa-status-dot green" />
-        <span className="aa-footer-label">CORE API ·</span>
+        <span className="aa-footer-label">FIREWORKS API ·</span>
         <span className="aa-footer-val">CONNECTED</span>
       </div>
 
@@ -405,7 +484,7 @@ export default function AnchorDashboard() {
 
       <div className="aa-footer-item">
         <span className="aa-footer-label">
-          CRA TECH SOLUTIONS
+          CR TECH SOLUTIONS
         </span>
         <span className="aa-footer-val">PROPRIETARY</span>
       </div>

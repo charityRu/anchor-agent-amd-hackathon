@@ -2,15 +2,26 @@
 // Anchor Backend (Stage 1 - Foundation Server)
 // =======================================================
 
+// =======================================================
+// IMPORTS
+// =======================================================
+
+// Load environment variables from .env
+require("dotenv").config();
+
 // Import Express framework
 const express = require("express");
 
 // Import CORS (allows frontend to talk to backend)
 const cors = require("cors");
 
+// Import Axios (used to communicate with Fireworks AI)
+const axios = require("axios");
+
+const { analyzeWithAI } = require("./services/aiService");
+
 // Create Express app instance
 const app = express();
-
 // =======================================================
 // MIDDLEWARE (setup layer)
 // =======================================================
@@ -36,74 +47,132 @@ app.get("/", (req, res) => {
 // 🧠 AGENT BRAIN v2 (STRUCTURED DECISION ENGINE)
 // =======================================================
 
-app.post("/analyze", (req, res) => {
-  const { text } = req.body;
 
-  const input = text.toLowerCase();
+app.post("/analyze", async (req, res) => {
+  try {
+    const { text } = req.body;
 
-  // =====================================================
-  // BASE RESPONSE STRUCTURE (IMPORTANT FOR SCALING)
-  // =====================================================
-  let response = {
-    type: "NORMAL",
-    severity: "LOW",
-    status: "idle",
-    timer: null,
+    const aiResponse = await axios.post(
+      "https://api.fireworks.ai/inference/v1/chat/completions",
+      {
+        model: "accounts/fireworks/models/minimax-m3",
 
-    // 🧠 NEW: future-proof fields (important for later)
-    actions: [],
-    confidence: 0,
-  };
+        messages: [
+          {
+            role: "system",
+            content: `
+You are Anchor Agent's emergency decision engine.
 
-  // =====================================================
-  // RULE 1: HIGH THREAT SCENARIO
-  // =====================================================
-  if (input.includes("follow") || input.includes("danger")) {
-    response = {
-      type: "THREAT",
-      severity: "HIGH",
-      status: "alert",
-      timer: 30,
+Return ONLY valid JSON.
 
-      actions: ["log_location", "prepare_alert"],
-      confidence: 0.85,
-    };
+{
+  "type":"NORMAL",
+  "severity":"LOW",
+  "status":"idle",
+  "timer":null,
+  "actions":["log_event"],
+  "confidence":0.90
+}
+
+Rules:
+- Return JSON only.
+- No markdown.
+- No explanations.
+- "actions" must contain SHORT machine-readable action names.
+`
+          },
+          {
+            role: "user",
+            content: text
+          }
+        ],
+
+        temperature: 0.2,
+        max_tokens: 200,
+        response_format: {
+          type: "json_object"
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.FIREWORKS_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const content = aiResponse.data.choices[0].message.content;
+    const decision = JSON.parse(content);
+    // =====================================================
+// STANDARDISE AI OUTPUT
+// =====================================================
+
+const actionMap = {
+  log_event: "log_location",
+  notify_user: "prepare_alert",
+  increase_awareness: "increase_awareness",
+  scan_surroundings: "increase_awareness",
+   track_subject: "increase_awareness",
+  prepare_evasion: "prepare_evasion",
+  prepare_evasion_route: "prepare_evasion",
+  share_live_location: "share_location",
+  share_location: "share_location",
+  urgent_alert: "urgent_alert",
+  call_contact: "call_contact",
+  call_emergency: "call_emergency"
+ 
+};
+
+// convert AI actions into Anchor actions
+decision.actions = (decision.actions || []).map(
+  action => actionMap[action] || action
+);
+
+// standardise decision type
+const typeMap = {
+  NORMAL: "NORMAL",
+  SAFE: "SAFE",
+  THREAT: "THREAT",
+  EMERGENCY: "EMERGENCY",
+
+  SUSPICIOUS: "THREAT",
+  SUSPICIOUS_ACTIVITY: "THREAT",
+
+  WARNING: "THREAT",
+
+  CRISIS: "EMERGENCY"
+};
+
+decision.type = typeMap[decision.type] || "NORMAL";
+
+// standardise severity
+const severityMap = {
+  NONE: "NONE",
+  LOW: "LOW",
+  MEDIUM: "HIGH",
+  HIGH: "HIGH",
+  CRITICAL: "CRITICAL"
+};
+
+decision.severity =
+  severityMap[decision.severity] || "LOW";
+
+    res.json(decision);
+
+  } catch (error) {
+
+    console.error("Fireworks Error:");
+
+    if (error.response) {
+      console.error(error.response.data);
+    } else {
+      console.error(error.message);
+    }
+
+    res.status(500).json({
+      error: "AI decision engine failed."
+    });
   }
-
-  // =====================================================
-  // RULE 2: EMERGENCY SCENARIO
-  // =====================================================
-  if (input.includes("help") || input.includes("emergency")) {
-    response = {
-      type: "EMERGENCY",
-      severity: "CRITICAL",
-      status: "alert",
-      timer: 15,
-
-      actions: ["urgent_alert", "share_location"],
-      confidence: 0.95,
-    };
-  }
-
-  // =====================================================
-  // RULE 3: SAFE / RESET SCENARIO
-  // =====================================================
-  if (input.includes("safe") || input.includes("okay")) {
-    response = {
-      type: "SAFE",
-      severity: "NONE",
-      status: "safe",
-      timer: null,
-
-      actions: ["reset_system"],
-      confidence: 0.9,
-    };
-  }
-
-  // =====================================================
-  // RETURN DECISION OBJECT
-  // =====================================================
-  res.json(response);
 });
 // =======================================================
 // START SERVER
