@@ -1,7 +1,7 @@
 # 🛟 Anchor Agent
 
 <p align="center">
-  <img src="./screenshots/dashboard-idle.png" width="900"/>
+  <img src="./screenshots/dashboard idle.jpg" width="900"/>
 </p>
 
 <p align="center">
