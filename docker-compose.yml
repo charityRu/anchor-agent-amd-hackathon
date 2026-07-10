@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+
+    ports:
+      - "5000:5000"
+
+    env_file:
+      - ./server/.env
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+    environment:
+      - VITE_ANCHOR_API_URL=http://backend:5000/api/analyze

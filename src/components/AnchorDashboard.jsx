@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { AgentEngine } from "../logic/AgentEngine.js";
+import EmergencyContacts from "./EmergencyContacts";
+
 
 export default function AnchorDashboard() {
   const [logs, setLogs] = useState([]);
@@ -12,6 +14,26 @@ export default function AnchorDashboard() {
   const [backendMessage, setBackendMessage] = useState("");
   const [input, setInput] = useState("");
   const [currentTime, setCurrentTime] = useState(new Date());
+ const [contacts, setContacts] = useState(() => {
+  const saved = localStorage.getItem("anchor_contacts");
+
+  return saved ? JSON.parse(saved) : [];
+});
+
+const [showContacts, setShowContacts] = useState(false);
+const [contactName, setContactName] = useState("");
+const [contactPhone, setContactPhone] = useState("");
+const [contactRelation, setContactRelation] = useState("");
+const [isOnline, setIsOnline] = useState(navigator.onLine);
+const callEmergency = () => {
+  window.location.href = "tel:112";
+};
+const callContact = (phone) => {
+  window.location.href = `tel:${phone}`;
+};
+const [latency, setLatency] = useState(0);
+const [confidence, setConfidence] = useState(0);
+
 
 // ===============================
 // 📍 GPS STATE
@@ -114,7 +136,25 @@ useEffect(() => {
   );
 }, []);
 
+useEffect(() => {
+  const handleOnline = () => {
+    setIsOnline(true);
+    addLog("🟢 Internet connection restored.");
+  };
 
+  const handleOffline = () => {
+    setIsOnline(false);
+    addLog("🟠 Offline Emergency Mode Activated.");
+  };
+
+  window.addEventListener("online", handleOnline);
+  window.addEventListener("offline", handleOffline);
+
+  return () => {
+    window.removeEventListener("online", handleOnline);
+    window.removeEventListener("offline", handleOffline);
+  };
+}, []);
 
 
   useEffect(() => {
@@ -242,6 +282,40 @@ const handleAnchorRelease = () => {
     anchorHoldTimer.current = null;
   }
 };
+
+const handleSaveContact = () => {
+  if (
+    !contactName.trim() ||
+    !contactPhone.trim() ||
+    !contactRelation.trim()
+  ) {
+    addLog("⚠️ Please complete all contact fields.");
+    return;
+  }
+
+  const newContact = {
+    name: contactName,
+    phone: contactPhone,
+    relation: contactRelation,
+  };
+
+  const updatedContacts = [...contacts, newContact];
+
+  setContacts(updatedContacts);
+
+  localStorage.setItem(
+    "anchor_contacts",
+    JSON.stringify(updatedContacts)
+  );
+
+  addLog(`👥 Emergency contact added: ${contactName}`);
+
+  setContactName("");
+  setContactPhone("");
+  setContactRelation("");
+};
+
+
   return (
   <div className="aa-root">
 
@@ -254,7 +328,9 @@ const handleAnchorRelease = () => {
 
       <div className="aa-topnav-center">
         <span className="aa-status-dot green" />
-        <span className="aa-status-text">SYSTEM · {statusLabel}</span>
+       <span className="aa-status-text">
+  SYSTEM · {statusLabel} · {isOnline ? "🟢 ONLINE" : "🟠 OFFLINE"}
+</span>
         <div className="aa-sev-wrap">
           <span className="aa-sev-label">SEV</span>
           {sevSegments.map((seg, i) => (
@@ -304,6 +380,7 @@ const handleAnchorRelease = () => {
               <div className="aa-orb-core" />
               <div className="aa-orb-ring" />
               <div className="aa-orb-ring aa-orb-ring-2" />
+              <div className="aa-orb-ring aa-orb-ring-3" />
             </div>
           </div>
 
@@ -334,29 +411,98 @@ const handleAnchorRelease = () => {
             <div className="aa-stat-card">
               <div className="aa-stat-label">AI CONFIDENCE</div>
               <div className="aa-stat-value cyan">
-                97<span className="aa-stat-unit">%</span>
-              </div>
+  {state.confidence || 97}
+  <span className="aa-stat-unit">%</span>
+</div>
               <div className="aa-stat-sub">model certainty</div>
             </div>
 
             <div className="aa-stat-card">
               <div className="aa-stat-label">CONTACTS ALERTED</div>
-              <div className="aa-stat-value cyan">3</div>
+              <div className="aa-stat-value cyan">{contacts.length}</div>
               <div className="aa-stat-sub">registered responders</div>
             </div>
-          </div>
+          
+           <div className="aa-stat-card">
+   <div className="aa-stat-label">
+      GPS STATUS
+   </div>
 
+   <div className="aa-stat-value cyan">
+      {location.latitude
+        ? "ONLINE"
+        : "OFFLINE"}
+   </div>
+
+   <div className="aa-stat-sub">
+      {location.latitude
+        ? location.latitude.toFixed(3)
+        : "Awaiting coordinates"}
+   </div>
+</div>
+</div>
+      
+          <button
+        className="aa-contacts-btn"
+        onClick={() => setShowContacts(!showContacts)}
+       >
+      ⚙ Manage Emergency Contacts
+     </button>
+
+{showContacts && (
+  <div className="aa-contacts-panel">
+    <h3>Emergency Contacts</h3>
+
+    <input
+      type="text"
+      placeholder="Name"
+      value={contactName}
+      onChange={(e) => setContactName(e.target.value)}
+    />
+
+    <input
+      type="text"
+      placeholder="Phone Number"
+      value={contactPhone}
+      onChange={(e) => setContactPhone(e.target.value)}
+    />
+
+    <input
+      type="text"
+      placeholder="Relationship"
+      value={contactRelation}
+      onChange={(e) => setContactRelation(e.target.value)}
+    />
+    <button
+  className="aa-save-contact-btn"
+  onClick={handleSaveContact}
+>
+  Save Contact
+</button>
+{contacts.length > 0 && (
+  <div className="aa-saved-contacts">
+    {contacts.map((contact, index) => (
+      <div key={index} className="aa-contact-item">
+        <strong>{contact.name}</strong>
+        <div>{contact.relation}</div>
+        <div>{contact.phone}</div>
+      </div>
+    ))}
+  </div>
+)}
+  </div>
+)}
           {/* INPUT ROW */}
           <div className="aa-input-row">
 
             {/* 🎤 VOICE BUTTON */}
-            <button
-              className="aa-btn"
-              onClick={toggleVoice}
-              title={isListening ? "Stop Listening" : "Start Listening"}
-            >
-              {isListening ? "🛑" : "🎤"}
-            </button>
+           <button
+  className={`aa-mic-btn ${isListening ? "aa-mic-active" : ""}`}
+  onClick={toggleVoice}
+  title={isListening ? "Stop Listening" : "Start Listening"}
+>
+  {isListening ? "🛑" : "🎤"}
+</button>
 
             <input
               className="aa-input"

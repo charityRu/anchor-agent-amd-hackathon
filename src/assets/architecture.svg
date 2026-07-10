@@ -1,0 +1,71 @@
+<svg width="900" height="560" viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Anchor Agent Architecture</title>
+<desc>React frontend connects to Express backend which calls the Anthropic API; on failure or offline, a local decision engine on the frontend takes over automatically.</desc>
+<rect width="900" height="560" fill="#05070c"/>
+
+<text x="450" y="40" text-anchor="middle" fill="#eaf2f5" font-family="Arial, sans-serif" font-size="20" font-weight="600">Anchor Agent — System Architecture</text>
+
+<!-- User -->
+<rect x="40" y="90" width="160" height="70" rx="10" fill="#0d1420" stroke="#35e0e0" stroke-width="1"/>
+<text x="120" y="120" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">User</text>
+<text x="120" y="140" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">Orb hold / voice / text</text>
+
+<!-- Frontend -->
+<rect x="280" y="90" width="220" height="130" rx="10" fill="#0d1420" stroke="#35e0e0" stroke-width="1"/>
+<text x="390" y="118" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">React + Vite Frontend</text>
+<text x="390" y="140" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">AnchorDashboard.jsx</text>
+<text x="390" y="158" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">AgentEngine.js</text>
+<text x="390" y="176" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">GPS · Telemetry · Contacts</text>
+<text x="390" y="200" text-anchor="middle" fill="#ffb020" font-family="Arial" font-size="10">online/offline listeners</text>
+
+<!-- Local decision engine -->
+<rect x="280" y="260" width="220" height="90" rx="10" fill="#0d1420" stroke="#ffb020" stroke-width="1"/>
+<text x="390" y="288" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">Local Decision Engine</text>
+<text x="390" y="308" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">On-device heuristic</text>
+<text x="390" y="326" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">Zero network dependency</text>
+
+<!-- Backend -->
+<rect x="600" y="90" width="220" height="130" rx="10" fill="#0d1420" stroke="#35e0e0" stroke-width="1"/>
+<text x="710" y="118" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">Express Backend</text>
+<text x="710" y="140" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">/api/analyze</text>
+<text x="710" y="160" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">Request validation</text>
+<text x="710" y="178" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">Response shaping</text>
+
+<!-- Anthropic API -->
+<rect x="600" y="260" width="220" height="90" rx="10" fill="#0d1420" stroke="#ff3b4e" stroke-width="1"/>
+<text x="710" y="288" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">Anthropic API</text>
+<text x="710" y="308" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">Claude — severity</text>
+<text x="710" y="326" text-anchor="middle" fill="#9fb0bb" font-family="Arial" font-size="11">classification</text>
+
+<!-- Response chain -->
+<rect x="280" y="400" width="540" height="120" rx="10" fill="#0d1420" stroke="#35e0e0" stroke-width="1"/>
+<text x="550" y="424" text-anchor="middle" fill="#eaf2f5" font-family="Arial" font-size="13" font-weight="600">Automatic Response Chain</text>
+<text x="310" y="450" fill="#9fb0bb" font-family="Arial" font-size="11">Threat classified</text>
+<text x="310" y="470" fill="#9fb0bb" font-family="Arial" font-size="11">GPS transmitted</text>
+<text x="310" y="490" fill="#9fb0bb" font-family="Arial" font-size="11">Contacts notified</text>
+<text x="550" y="450" fill="#9fb0bb" font-family="Arial" font-size="11">Dispatch request (simulated)</text>
+<text x="550" y="470" fill="#9fb0bb" font-family="Arial" font-size="11">Hotline sequence (simulated)</text>
+<text x="550" y="490" fill="#9fb0bb" font-family="Arial" font-size="11">Incident logged</text>
+
+<!-- Arrows -->
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+<path d="M0,0 L6,3 L0,6 Z" fill="#35e0e0"/>
+</marker>
+</defs>
+
+<line x1="200" y1="125" x2="278" y2="125" stroke="#35e0e0" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="500" y1="140" x2="598" y2="140" stroke="#35e0e0" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="710" y1="220" x2="710" y2="258" stroke="#ff3b4e" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="390" y1="220" x2="390" y2="258" stroke="#ffb020" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+<text x="420" y="245" fill="#ffb020" font-family="Arial" font-size="10">on failure / offline</text>
+
+<line x1="390" y1="350" x2="450" y2="398" stroke="#35e0e0" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="710" y1="350" x2="650" y2="398" stroke="#35e0e0" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<!-- Legend -->
+<rect x="40" y="480" width="14" height="14" fill="#0d1420" stroke="#35e0e0"/>
+<text x="60" y="491" fill="#9fb0bb" font-family="Arial" font-size="10">Online / core path</text>
+<rect x="40" y="504" width="14" height="14" fill="#0d1420" stroke="#ffb020"/>
+<text x="60" y="515" fill="#9fb0bb" font-family="Arial" font-size="10">Offline fallback path</text>
+</svg>
