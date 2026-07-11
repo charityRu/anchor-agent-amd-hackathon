@@ -201,25 +201,38 @@ Emergency Actions Continue
 
 ## Dashboard
 
-![Dashboard](./screenshots/dashboard%20idle.png)
+![Dashboard](./screenshots/dashboard%20idle.jpg)
 
 ---
 
 ## Emergency Activated
 
 ![Emergency](./screenshots/after%20trigger.jpg)
+![Emergency](./screenshots/after%20trigger02.jpg)
+
+---
+## Dashboard offline
+
+![Dashboard](/screenshots/offline%20dashboard%20idle.jpg)
+
+
+
+---
+## Emergency Activated offline
+
+![Emergency](./screenshots/offlineTrigger.jpg)
 
 ---
 
 ## Contacts Management
 
-![Contacts](./screenshots/contacts-panel.png)
+![Contacts](./screenshots/contact%20panel.jpg)
 
 ---
 
 ## Mobile View
 
-![Mobile](./screenshots/mobile-view.png)
+![Mobile](./screenshots/mobile.jpg)
 
 ---
 
@@ -317,15 +330,34 @@ Deploy using:
 - Vercel
 
 ---
-
 ## Backend
 
 Deploy using:
 
 - Render
-- Railway
+
 
 ---
+
+## Live Demo
+
+Frontend:
+https://anchor-agent-amd-hackathon.vercel.app/
+
+Backend:
+https://anchor-agent-amd-hackathon.onrender.com
+
+Demo video:
+## Live Demo
+
+Frontend:
+https://anchor-agent-amd-hackathon.vercel.app/
+
+Backend:
+https://anchor-agent-amd-hackathon.onrender.com
+
+Demo Video:
+https://www.loom.com/share/ebe8fca9f51a4c41b6ff319499cd7d39
 
 # 🔒 Privacy & Safety
 
